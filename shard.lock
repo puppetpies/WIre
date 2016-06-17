@@ -1,0 +1,18 @@
+version: 1.0
+shards:
+  crystal-monetdb-libmapi:
+    github: puppetpies/crystal-monetdb-libmapi
+    commit: f5937028ce18bc6090271d3abfbdaf1f808eb406
+
+  kemal:
+    github: sdogruyol/kemal
+    version: 0.13.0
+
+  kilt:
+    github: jeromegn/kilt
+    version: 0.3.3
+
+  radix:
+    github: luislavena/radix
+    version: 0.3.0
+
