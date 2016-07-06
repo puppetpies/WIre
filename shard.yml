@@ -1,5 +1,5 @@
 name: WireVision
-version: 0.1.0
+version: 0.1.1
 
 authors:
   - Bri in The Sky <brianh6854@googlemail.com>
@@ -8,9 +8,9 @@ development_dependencies:
   crystal-monetdb-libmapi:
     github: puppetpies/crystal-monetdb-libmapi
     version: ">= 0.1.1"
-  kemal:
-    github: sdogruyol/kemal
-    version: ">= 0.12.0"
+  pcap.cr:
+    github: maiha/pcap.cr
+    version: ">= 0.2.1"
 
 license: MIT
 
