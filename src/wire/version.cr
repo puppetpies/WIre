@@ -1,3 +1,3 @@
-module WireVision
-  VERSION = "0.1.0"
+module Wire
+  VERSION = "0.1.1"
 end
