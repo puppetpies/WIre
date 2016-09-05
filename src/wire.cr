@@ -18,6 +18,8 @@ require "colorize"
 require "crystal-monetdb-libmapi"
 require "option_parser"
 
+class SetfilterError < Exception; end
+
 def check_permission?
   perm = %x(id -u)[0..0].to_i
   unless perm == 0
@@ -82,9 +84,20 @@ module Pcap
         exit
       end
     end
+    def setfilter(filter : String, optimize : Int32 = 1)
+      # compile first
+      bpfprogram = Pointer(LibPcap::BpfProgram).malloc(1_u64)
+      checkfilter = LibPcap.pcap_compile(@pcap, bpfprogram, filter, optimize, @netmask)
+      if checkfilter == 0
+        return LibPcap.pcap_setfilter(@pcap, bpfprogram)
+      else
+        abort SetfilterError.new "Please specify a valid pcap filter"
+        exit
+      end
+    end
+    
   end
 end
-
 
 module Wire
   filter   = "tcp port 80"
@@ -96,8 +109,6 @@ module Wire
   dataonly = false
   bodymode = false
   separatorlen = 100
-  
-
   
   opts = OptionParser.new do |parser|
     parser.banner = "WIre version #{VERSION}\n\nUsage: WIre [options]"
@@ -119,7 +130,6 @@ module Wire
     cap = Pcap::Capture.open_live(device, snaplen: snaplen, timeout_ms: timeout)
     at_exit { cap.close }
     cap.setfilter(filter)
-
     cap.loop do |pkt|
       next if dataonly && !pkt.tcp_data?
 
