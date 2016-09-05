@@ -27,6 +27,42 @@ def check_permission?
   end
 end
 
+def display(src : String, dst : String)
+  io = "#{Time.now.to_s} "
+  io += "Src IP Addr: #{src.colorize(:yellow)} "
+  io += "Dst IP Addr: #{dst.colorize(:yellow)} "
+end
+
+module Pcap
+  class IpHeader
+    def inspect(io : IO)
+      io << "IpHeader\n"
+      io << "  Version         : #{ip_v}  Protocol  : #{ip_proto}\n" % 
+      io << "  Header Length   : %d words (%d bytes)\n" % [ip_hl, ip_hl*4]
+      io << "  Service Type    : %s\n" % ip_tos
+      io << "  Total Length    : %s\n" % ip_len
+      io << "  Identification  : %s\n" % ip_id
+      io << "  Flags           : #{ip_frag}   TTL : #{ip_ttl}\n"
+      io << "  Header Checksum : %s\n" % ip_sum
+      io << "  Src IP Addr     : #{src}   Dst IP Addr     : #{dst}\n"
+    end
+  end
+end
+
+module Pcap
+  class TcpHeader
+    def inspect(io : IO)
+      io << "TcpHeader\n"
+      io << "  Src Port: #{tcp_src} Dst Port: #{tcp_dst}\n" 
+      io << "  Sequence Number     : %s\n" % tcp_seq
+      io << "    Data Offset       : %d words (%d bytes)\n" % [tcp_doff, length]
+      io << "    Flags             : [%s]\n" % tcp_flags
+      io << "      CWR: #{tcp_cwr?} ECE: #{tcp_ece?} URG: #{tcp_urg?} ACK: #{tcp_ack?}\n"
+      io << "      PUSH: #{tcp_push?} RST: #{tcp_rst?} SYN: #{tcp_syn?} FIN: #{tcp_fin?}\n" 
+    end
+  end
+end
+
 module Pcap
   class Capture
     def self.open_live(device : String, snaplen : Int32 = DEFAULT_SNAPLEN, promisc : Int32 = DEFAULT_PROMISC, timeout_ms : Int32 = DEFAULT_TIMEOUT_MS)
@@ -49,6 +85,7 @@ module Pcap
   end
 end
 
+
 module Wire
   filter   = "tcp port 80"
   device   = "lo"
@@ -58,7 +95,10 @@ module Wire
   verbose  = false
   dataonly = false
   bodymode = false
+  separatorlen = 100
+  
 
+  
   opts = OptionParser.new do |parser|
     parser.banner = "WIre version #{VERSION}\n\nUsage: WIre [options]"
 
@@ -84,12 +124,15 @@ module Wire
       next if dataonly && !pkt.tcp_data?
 
       if bodymode
-        puts "%s: %s" % [pkt.packet_header, pkt.tcp_data.to_s.inspect]
+        #puts "%s: %s" % [pkt.packet_header, pkt.tcp_data.to_s.inspect]
       else
-        puts pkt.to_s
-        puts "-" * 80     if verbose
-        puts pkt.inspect  if verbose
-        puts pkt.hexdump  if hexdump
+        #puts pkt.to_s
+        puts display(pkt.src, pkt.dst)
+        puts "-" * separatorlen
+        puts pkt.inspect
+        #puts "-" * separatorlen     if verbose
+        #puts pkt.inspect  if verbose
+        #puts pkt.hexdump  if hexdump
       end
     end
   rescue err
