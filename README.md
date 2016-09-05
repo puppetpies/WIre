@@ -1,12 +1,12 @@
-# WireVision
+# WIre
 
-TODO: Write a description here
+A packet analyzer written purely in Crystal
 
 ## Installation
 
 
-TODO: Write installation instructions here
-
+make
+bin/wire -i eth0
 
 ## Usage
 
@@ -20,7 +20,7 @@ TODO: Write development instructions here
 
 ## Contributing
 
-1. Fork it ( https://github.com/[your-github-name]/WireVision/fork )
+1. Fork it ( https://github.com/puppetpies/WIre/fork )
 2. Create your feature branch (git checkout -b my-new-feature)
 3. Commit your changes (git commit -am 'Add some feature')
 4. Push to the branch (git push origin my-new-feature)
@@ -28,4 +28,4 @@ TODO: Write development instructions here
 
 ## Contributors
 
-- [[your-github-name]](https://github.com/[your-github-name]) Bri in The Sky - creator, maintainer
+- [[WIre]](https://github.com/puppetpies/WIre) Bri in The Sky - creator, maintainer
