@@ -19,6 +19,7 @@ require "crystal-monetdb-libmapi"
 require "option_parser"
 
 class SetfilterError < Exception; end
+class PrivilegeError < Exception; end
 
 def check_permission?
   perm = %x(id -u)[0..0].to_i
@@ -33,6 +34,11 @@ def display(src : String, dst : String)
   io = "#{Time.now.to_s} "
   io += "Src IP Addr: #{src.colorize(:yellow)} "
   io += "Dst IP Addr: #{dst.colorize(:yellow)} "
+end
+
+def display_option(name : String, var : String | Bool | Int32)
+  print "#{name.camelcase}: ".colorize(:blue)
+  print "#{var}\n".colorize(:white)
 end
 
 module Pcap
@@ -71,7 +77,7 @@ module Pcap
       errbuf = uninitialized UInt8[LibPcap::PCAP_ERRBUF_SIZE]
       case check_permission?
       when false
-        abort "Please execute this appllication as a privileged user !"
+        abort PrivilegeError.new "Please execute this appllication as a privileged user !"
         exit
       when true
         pcap_t = LibPcap.pcap_open_live(device, snaplen, promisc, timeout_ms, errbuf)
@@ -109,32 +115,39 @@ module Wire
   dataonly = false
   bodymode = false
   separatorlen = 100
+  banner = "WIre version #{VERSION}\n\nUsage: WIre [options] | -h for Help\n"
   
   opts = OptionParser.new do |parser|
-    parser.banner = "WIre version #{VERSION}\n\nUsage: WIre [options]"
-
+    parser.banner = banner
     parser.on("-i lo", "Listen on interface") { |i| device = i }
     parser.on("-f 'tcp port 80'", "Pcap filter string. See pcap-filter(7)"  ) { |f| filter = f }
-    parser.on("-p 80", "Capture port (overridden by -f)") { |p| filter = "tcp port #{p}" }
     parser.on("-s 1500", "Snapshot length"  ) { |s| snaplen = s.to_i }
     parser.on("-d", "Filter packets where tcp data exists") { dataonly = true }
     parser.on("-b", "Body printing mode"    ) { bodymode = true }
     parser.on("-x", "Show hexdump output"   ) { hexdump  = true }
-    parser.on("-v", "Show verbose output"   ) { verbose  = true }
+    #parser.on("-v", "Show verbose output"   ) { verbose  = true }
     parser.on("-h", "--help", "Show help"   ) { puts parser; exit 0 }
   end
 
   begin
     opts.parse!
-    
+    puts banner.colorize(:cyan)
+    puts "Starting up!".colorize(:red)
+    puts "============\n".colorize(:red)
+    display_option("Filter", filter)
+    display_option("Device", device)
+    display_option("Snaplen", snaplen)
+    #display_option("Verbose", verbose)
+    display_option("Hexdump", hexdump)    
+    display_option("Dataonly", dataonly)
+        
     cap = Pcap::Capture.open_live(device, snaplen: snaplen, timeout_ms: timeout)
     at_exit { cap.close }
     cap.setfilter(filter)
     cap.loop do |pkt|
-      next if dataonly && !pkt.tcp_data?
-
+      next if dataonly && !pkt.tcp_data
       if bodymode
-        #puts "%s: %s" % [pkt.packet_header, pkt.tcp_data.to_s.inspect]
+        puts "%s: %s" % [pkt.packet_header, pkt.tcp_data.to_s.inspect]
       else
         #puts pkt.to_s
         puts display(pkt.src, pkt.dst)
@@ -142,7 +155,7 @@ module Wire
         puts pkt.inspect
         #puts "-" * separatorlen     if verbose
         #puts pkt.inspect  if verbose
-        #puts pkt.hexdump  if hexdump
+        puts pkt.hexdump  if hexdump
       end
     end
   rescue err
