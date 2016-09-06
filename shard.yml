@@ -8,7 +8,10 @@ development_dependencies:
   crystal-monetdb-libmapi:
     github: puppetpies/crystal-monetdb-libmapi
     version: ">= 0.1.1"
-
+  
+  mysql:
+    github: crystal-lang/crystal-mysql
+  
   pcap:
     github: maiha/pcap.cr 
     version: ">= 0.2.1"

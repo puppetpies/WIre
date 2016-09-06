@@ -4,6 +4,14 @@ shards:
     github: puppetpies/crystal-monetdb-libmapi
     commit: c02485f24ad38a8db0d9bc0d926feb938aefbea1
 
+  db:
+    github: crystal-lang/crystal-db
+    version: 0.1.0
+
+  mysql:
+    github: crystal-lang/crystal-mysql
+    version: 0.1.2
+
   pcap:
     github: maiha/pcap.cr
     version: 0.2.2
