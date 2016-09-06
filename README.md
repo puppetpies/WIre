@@ -2,14 +2,17 @@
 
 A packet analyzer written purely in Crystal
 
+![Wire](https://raw.githubusercontent.com/puppetpies/WIre/b62dfa0975a53d2465de788db09e660d11917e52/demos/Wire.png)
+
 ## Installation
 
-
+```
 make
-bin/wire -i eth0
+```
 
 ## Usage
-
+```
+bin/wire -i eth0 -f 'tcp port 8080'
 
 
 TODO: Write usage instructions here
