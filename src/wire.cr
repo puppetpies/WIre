@@ -16,31 +16,14 @@ require "./wire/*"
 require "json"
 require "colorize"
 require "crystal-monetdb-libmapi"
+require "mysql"
 require "option_parser"
 
 class SetfilterError < Exception; end
 class PrivilegeError < Exception; end
 
-def check_permission?
-  perm = %x(id -u)[0..0].to_i
-  unless perm == 0
-    return false
-  else
-    return true
-  end
-end
 
-def display(src : String, dst : String)
-  io = "#{Time.now.to_s} "
-  io += "Src IP Addr: #{src.colorize(:yellow)} "
-  io += "Dst IP Addr: #{dst.colorize(:yellow)} "
-end
-
-def display_option(name : String, var : String | Bool | Int32)
-  print "#{name.camelcase}: ".colorize(:blue)
-  print "#{var}\n".colorize(:white)
-end
-
+# Some tweaks to the output
 module Pcap
   class IpHeader
     def inspect(io : IO)
@@ -75,7 +58,7 @@ module Pcap
   class Capture
     def self.open_live(device : String, snaplen : Int32 = DEFAULT_SNAPLEN, promisc : Int32 = DEFAULT_PROMISC, timeout_ms : Int32 = DEFAULT_TIMEOUT_MS)
       errbuf = uninitialized UInt8[LibPcap::PCAP_ERRBUF_SIZE]
-      case check_permission?
+      case Wire.check_permission?
       when false
         abort PrivilegeError.new "Please execute this appllication as a privileged user !"
         exit
@@ -101,16 +84,35 @@ module Pcap
         exit
       end
     end
-    
   end
 end
 
 module Wire
+
+  def self.check_permission?
+    perm = %x(id -u)[0..0].to_i
+    unless perm == 0
+      return false
+    else
+      return true
+    end
+  end
+
+  def self.display(src : String, dst : String)
+    io = "#{Time.now.to_s} "
+    io += "Src IP Addr: #{src.colorize(:yellow)} "
+    io += "Dst IP Addr: #{dst.colorize(:yellow)} "
+  end
+
+  def self.display_option(name : String, var : String | Bool | Int32)
+    print "#{name.camelcase}: ".colorize(:blue)
+    print "#{var}\n".colorize(:white)
+  end
+
   filter   = "tcp port 80"
   device   = "lo"
   snaplen  = 1500
   timeout  = 1000
-  hexdump  = false
   verbose  = false
   dataonly = false
   bodymode = false
@@ -124,8 +126,7 @@ module Wire
     parser.on("-s 1500", "Snapshot length"  ) { |s| snaplen = s.to_i }
     parser.on("-d", "Filter packets where tcp data exists") { dataonly = true }
     parser.on("-b", "Body printing mode"    ) { bodymode = true }
-    parser.on("-x", "Show hexdump output"   ) { hexdump  = true }
-    #parser.on("-v", "Show verbose output"   ) { verbose  = true }
+    parser.on("-v", "Show verbose output"   ) { verbose  = true }
     parser.on("-h", "--help", "Show help"   ) { puts parser; exit 0 }
   end
 
@@ -137,8 +138,7 @@ module Wire
     display_option("Filter", filter)
     display_option("Device", device)
     display_option("Snaplen", snaplen)
-    #display_option("Verbose", verbose)
-    display_option("Hexdump", hexdump)    
+    display_option("Verbose", verbose) 
     display_option("Dataonly", dataonly)
         
     cap = Pcap::Capture.open_live(device, snaplen: snaplen, timeout_ms: timeout)
@@ -153,10 +153,10 @@ module Wire
         puts "-" * separatorlen
         puts display(pkt.src, pkt.dst)
         puts "-" * separatorlen
-        puts pkt.inspect
+        puts pkt.inspect if verbose
         #puts "-" * separatorlen     if verbose
         #puts pkt.inspect  if verbose
-        puts pkt.hexdump  if hexdump
+        #puts pkt.hexdump
       end
     end
   rescue err
