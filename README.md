@@ -6,7 +6,14 @@ A packet analyzer written purely in Crystal
 
 ## Installation
 
+First you will need the Crystal Language from http://crystal-lang.org
+
+You will need to have are shards to be installed however you should just be able to download the binary if on x86_64
+from the bin/ directory.
+
+
 ```
+shards update
 make
 ```
 
@@ -15,11 +22,11 @@ make
 bin/wire -i eth0 -f 'tcp port 8080'
 
 
-TODO: Write usage instructions here
-
 ## Development
 
-TODO: Write development instructions here
+TODO: Add MonetDB support
+TODO: Add MySQL support
+TODO: JSON output format
 
 ## Contributing
 
