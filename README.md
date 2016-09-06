@@ -15,11 +15,12 @@ from the bin/ directory.
 ```
 shards update
 make
+make install
 ```
 
-## Usage
+## Usage as root
 ```
-bin/wire -i eth0 -f 'tcp port 8080'
+wire -i eth0 -f 'tcp port 8080'
 
 
 ## Development
