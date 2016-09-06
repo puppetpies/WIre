@@ -150,6 +150,7 @@ module Wire
         puts "%s: %s" % [pkt.packet_header, pkt.tcp_data.to_s.inspect]
       else
         #puts pkt.to_s
+        puts "-" * separatorlen
         puts display(pkt.src, pkt.dst)
         puts "-" * separatorlen
         puts pkt.inspect
