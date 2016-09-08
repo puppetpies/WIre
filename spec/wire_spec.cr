@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-describe WireVision do
+describe Wire do
   # TODO: Write tests
 
   it "works" do
