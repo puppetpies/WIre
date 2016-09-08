@@ -1,0 +1,11 @@
+Updating 4ee8ad4..768d8ac
+Fast-forward
+ Makefile                                  |  2 +-
+ spec/{WireVision_spec.cr => wire_spec.cr} |  2 +-
+ src/wire.cr                               | 90 +------------------------------
+ src/wire/pcaptweaks.cr                    | 59 ++++++++++++++++++++
+ src/wire/wire_defs.cr                     | 23 ++++++++
+ 5 files changed, 85 insertions(+), 91 deletions(-)
+ rename spec/{WireVision_spec.cr => wire_spec.cr} (81%)
+ create mode 100644 src/wire/pcaptweaks.cr
+ create mode 100644 src/wire/wire_defs.cr
