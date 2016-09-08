@@ -1,7 +1,7 @@
 all: wire
 
 wire:
-	crystal build src/wire.cr -o bin/wire
+	crystal build --release src/wire.cr -o bin/wire
 
 PREFIX ?= /usr/local
 
