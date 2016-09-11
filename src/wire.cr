@@ -28,6 +28,8 @@ module Wire
   verbose  = false
   dataonly = false
   bodymode = false
+  filemode = false
+  dumpfile = ""
   separatorlen = 100
   banner = "WIre version #{VERSION}\n\nUsage: WIre [options] | -h for Help\n"
   
@@ -36,6 +38,7 @@ module Wire
     parser.on("-i lo", "Listen on interface") { |i| device = i }
     parser.on("-f 'tcp port 80'", "Pcap filter string. See pcap-filter(7)"  ) { |f| filter = f }
     parser.on("-s 1500", "Snapshot length"  ) { |s| snaplen = s.to_i }
+    parser.on("-o dumpfile", "Open pcap dump file") {|d| dumpfile = d; filemode = true }
     parser.on("-d", "Filter packets where tcp data exists") { dataonly = true }
     parser.on("-b", "Body printing mode"    ) { bodymode = true }
     parser.on("-v", "Show verbose output"   ) { verbose  = true }
@@ -52,8 +55,13 @@ module Wire
     display_option("Snaplen", snaplen)
     display_option("Verbose", verbose) 
     display_option("Dataonly", dataonly)
-        
-    cap = Pcap::Capture.open_live(device, snaplen: snaplen, timeout_ms: timeout)
+    
+    unless filemode == true
+      cap = Pcap::Capture.open_live(device, snaplen: snaplen, timeout_ms: timeout)
+    else
+      puts "Pcap File: #{dumpfile}".colorize(:blue)
+      cap = Pcap::Capture.open_offline(dumpfile)
+    end
     at_exit { cap.close }
     cap.setfilter(filter)
     cap.loop do |pkt|
