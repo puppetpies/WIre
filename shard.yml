@@ -16,5 +16,8 @@ development_dependencies:
     github: maiha/pcap.cr 
     version: ">= 0.2.1"
 
+  jq:
+    github: maiha/jq.cr
+
 license: MIT
 
