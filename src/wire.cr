@@ -11,16 +11,17 @@
 #   Plus also creating pcap.cr a very nice user library :)
 # #######################################################################
 
+require "jq"
+require "crystal-monetdb-libmapi"
+require "crystal-monetdb-libmapi/monetdb_data"
+require "mysql"
 require "./wire/*"
 require "pcap"
 require "json"
 require "colorize"
-require "crystal-monetdb-libmapi"
-require "mysql"
 require "option_parser"
 
 module Wire
-
   filter   = "tcp port 80"
   device   = "lo"
   snaplen  = 1500
@@ -40,12 +41,39 @@ module Wire
     parser.on("-s 1500", "Snapshot length"  ) { |s| snaplen = s.to_i }
     parser.on("-o dumpfile", "Open pcap dump file") {|d| dumpfile = d; filemode = true }
     parser.on("-d", "Filter packets where tcp data exists") { dataonly = true }
-    parser.on("-b", "Body printing mode"    ) { bodymode = true }
-    parser.on("-v", "Show verbose output"   ) { verbose  = true }
-    parser.on("-h", "--help", "Show help"   ) { puts parser; exit 0 }
+    parser.on("-b", "Body printing mode") { bodymode = true }
+    parser.on("-v", "Show verbose output") { verbose  = true }
+    parser.on("-h", "--help", "Show help") { puts parser; exit 0 }
   end
 
   begin
+    config_json_data = Wire.load_config
+    j = Jq.new(config_json_data)
+    if j[".driver"].as_s == "monetdb"
+      conn = MonetDB::ClientJSON.new
+      conn.host = j[".host"].as_s
+      conn.port = j[".port"].as_i
+      conn.username = j[".username"].as_s
+      conn.password = j[".password"].as_s
+      conn.db = j[".schema"].as_s
+      conn.connect
+      if conn.is_connected?
+        puts " >> Connected to MonetDB on #{j[".host"].as_s}:#{j[".port"].as_i}".colorize(:yellow)
+      else
+        abort " >> Connection error".colorize(:red)
+      end
+    elsif j[".driver"].as_s == "mysql"
+      conn = MySQL.connect(j[".host"].as_s, 
+                           j[".username"].as_s, 
+                           j[".password"].as_s, j[".schema"].as_s, j[".port"].as_i, nil)
+      if conn
+        puts " >> Connected to MySQL on #{j[".host"].as_s}:#{j[".port"].as_i}".colorize(:yellow)
+      else
+        abort " >> Connection error".colorize(:red)
+      end
+    else
+      false
+    end
     opts.parse!
     puts banner.colorize(:cyan)
     puts "Starting up!".colorize(:red)
