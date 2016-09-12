@@ -22,6 +22,52 @@ require "colorize"
 require "option_parser"
 
 module Wire
+  class DB
+    property? driver : String
+    property? host : String
+    property? username : String
+    property? password : String
+    property? schema : String
+    property? port : UInt16
+    property? conn : MySQL::Connection | MonetDBMAPI::Mapi
+    
+    def initialize(driver, host, username, password, schema, port)
+      @driver = driver
+      @host = host
+      @username = username
+      @password = password
+      @schema = schema
+      @port = port
+      @conn = connect
+    end
+    
+    def connect
+      if @driver == "monetdb"
+        @conn = MonetDB::ClientJSON.new
+        @conn.host = @host
+        @conn.username = @username
+        @conn.password = @password
+        @conn.db = @schema
+        @conn.port = @port
+        @conn.connect
+      elsif @driver == "mysql"
+        @conn = MySQL.connect(@host, 
+                              @username, 
+                              @password, @schema, @port, nil)
+      end
+    end
+    
+    def query(sql)
+      begin
+        @conn.query(sql)
+      rescue err
+        STDERR.puts "#{$0}: #{err}"
+      end
+    end
+  end
+end
+
+module Wire
   filter   = "tcp port 80"
   device   = "lo"
   snaplen  = 1500
@@ -87,7 +133,7 @@ module Wire
     unless filemode == true
       cap = Pcap::Capture.open_live(device, snaplen: snaplen, timeout_ms: timeout)
     else
-      puts "Pcap File: #{dumpfile}".colorize(:blue)
+      puts " > Pcap File: #{dumpfile}".colorize(:blue)
       cap = Pcap::Capture.open_offline(dumpfile)
     end
     at_exit { cap.close }
