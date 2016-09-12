@@ -3,6 +3,9 @@ all: wire
 wire:
 	crystal build --release src/wire.cr -o bin/wire
 
+dev:
+	crystal build src/wire.cr -o bin/wire
+
 PREFIX ?= /usr/local
 
 install: wire
