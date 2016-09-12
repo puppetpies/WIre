@@ -2,19 +2,15 @@ version: 1.0
 shards:
   crystal-monetdb-libmapi:
     github: puppetpies/crystal-monetdb-libmapi
-    commit: c02485f24ad38a8db0d9bc0d926feb938aefbea1
-
-  db:
-    github: crystal-lang/crystal-db
-    version: 0.1.0
+    commit: d3254d581d493f998b178f663a4783fcaa7867ff
 
   jq:
     github: maiha/jq.cr
     version: 0.3.0
 
   mysql:
-    github: crystal-lang/crystal-mysql
-    version: 0.1.2
+    github: waterlink/crystal-mysql
+    version: 0.4.3
 
   pcap:
     github: maiha/pcap.cr
