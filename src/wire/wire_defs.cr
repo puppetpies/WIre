@@ -1,5 +1,7 @@
 module Wire
 
+  @@configfile = "config.json"
+  
   def self.check_permission?
     perm = %x(id -u)[0..0].to_i
     unless perm == 0
@@ -7,6 +9,31 @@ module Wire
     else
       return true
     end
+  end
+  
+  def self.home?
+    home = "#{ENV["HOME"]}/.#{self.name}"
+    unless Dir.exists?("#{home}")
+      Dir.mkdir("#{home}")
+    else
+      return home
+    end
+    return home
+  end
+  
+  def self.load_config
+    home = self.home?
+    json_data = ""
+    if File.exists?("#{home}/#{@@configfile}")
+      File.open("#{home}/#{@@configfile}") do |n|
+        n.each_line {|l|
+          json_data += "#{l}"
+        }
+      end
+    else
+      abort "config.json required under #{home}"
+    end
+    return json_data
   end
 
   def self.display(src : String, dst : String)
