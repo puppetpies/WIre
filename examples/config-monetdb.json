@@ -1,0 +1,14 @@
+{
+  "driver":"monetdb"
+  "host":"172.17.0.2"
+  "username":"monetdb"
+  "password":"monetdb"
+  "port":50000
+  "schema":"threatmonitor"
+  "tbl_ippacket":"ippacket"
+  "tbl_tcppacket":"tcppacket"
+  "tbl_udppacket":"udppacket"
+  "tbl_http_traffic_json":"http_traffic_json"
+  "tbl_http_traffic_ua":"http_traffic_ua"
+}
+
