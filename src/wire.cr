@@ -23,20 +23,21 @@ require "colorize"
 require "option_parser"
 
 module Wire
-  
+  # Connection error / banners
   CONNERR = ">> Connection error"
   CONNBANNER = ">> Connected to database on"
   
-  filter   = "tcp port 80"
-  device   = "lo"
-  snaplen  = 1500
-  timeout  = 1000
+  # Variables to use with Options parser
+  filter   = "tcp port 80" # PCAP-FILTER(7) man page for details or TSHARK(1) via wireshark
+  device   = "lo" # Interface name default to your local loopback
+  snaplen  = 1500 # Default size 1500 like every other capture tool the max is 65535
+  timeout  = 1000 # Not implemented in my tool but it limits the number of seconds to capture for ?
   verbose  = false
   dataonly = false
   bodymode = false
   filemode = false
-  dumpfile = ""
-  separatorlen = 100
+  dumpfile = "" # Read in a LibPcap created capture file instead of interfaces also works with the database
+  separatorlen = 100_u8
   banner = "WIre version #{VERSION}\n\nUsage: WIre [options] | -h for Help\n"
   
   opts = OptionParser.new do |parser|
@@ -52,7 +53,7 @@ module Wire
   end
 
   begin
-    config_json_data = Wire.load_config
+    config_json_data = Wire.load_config # Read the json config of your DB details
     j = Jq.new(config_json_data)
     case j[".driver"].as_s
     when "monetdb"
@@ -116,6 +117,6 @@ module Wire
       end
     end
   rescue err
-    STDERR.puts "#{$0}: #{err}"
+    STDERR.puts "#{$0}: #{err}" # The Catch all
   end
 end
