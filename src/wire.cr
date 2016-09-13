@@ -14,6 +14,7 @@
 require "jq"
 require "crystal-monetdb-libmapi"
 require "crystal-monetdb-libmapi/monetdb_data"
+require "pg"
 require "mysql"
 require "./wire/*"
 require "pcap"
