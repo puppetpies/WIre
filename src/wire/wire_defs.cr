@@ -11,6 +11,10 @@ module Wire
     end
   end
   
+  def self.dbbanner(host, port, username)
+    puts "#{CONNBANNER} #{host}:#{port} as #{username}".colorize(:yellow)
+  end
+  
   def self.home?
     home = "#{ENV["HOME"]}/.#{self.name}"
     unless Dir.exists?("#{home}")
