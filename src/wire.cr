@@ -23,6 +23,10 @@ require "colorize"
 require "option_parser"
 
 module Wire
+  
+  CONNERR = ">> Connection error"
+  CONNBANNER = ">> Connected to database on"
+  
   filter   = "tcp port 80"
   device   = "lo"
   snaplen  = 1500
@@ -50,7 +54,8 @@ module Wire
   begin
     config_json_data = Wire.load_config
     j = Jq.new(config_json_data)
-    if j[".driver"].as_s == "monetdb"
+    case j[".driver"].as_s
+    when "monetdb"
       conn = MonetDB::ClientJSON.new
       conn.host = j[".host"].as_s
       conn.port = j[".port"].as_i
@@ -60,19 +65,19 @@ module Wire
       conn.connect
       p conn
       if conn.is_connected?
-        puts " >> Connected to MonetDB on #{j[".host"].as_s}:#{j[".port"].as_i}".colorize(:yellow)
+        Wire.dbbanner("#{j[".host"].as_s}", "#{j[".port"].as_i}", "#{j[".username"].as_s}")
       else
-        abort " >> Connection error".colorize(:red)
+        abort CONNERR.colorize(:red)
       end
-    elsif j[".driver"].as_s == "mysql"
+    when "mysql"
       conn = MySQL.connect(j[".host"].as_s, 
                            j[".username"].as_s, 
                            j[".password"].as_s, j[".schema"].as_s, j[".port"].as_i, nil)
-      p conn
+      p conn 
       if conn
-        puts " >> Connected to MySQL on #{j[".host"].as_s}:#{j[".port"].as_i}".colorize(:yellow)
+        Wire.dbbanner("#{j[".host"].as_s}", "#{j[".port"].as_i}", "#{j[".username"].as_s}")
       else
-        abort " >> Connection error".colorize(:red)
+        abort CONNERR.colorize(:red)
       end
     else
       false
