@@ -9,7 +9,7 @@ ALTER USER "wire" SET SCHEMA "wire";
 DROP TABLE "wire".ippacket;
 CREATE TABLE "wire".ippacket (
   "id" bigint NOT NULL primary key,
-  "recv_date" string,
+  "recv_date" date,
   "ip_df" varchar(5),
   "ip_dst" varchar(15),
   "ip_hlen" int not null,
@@ -31,7 +31,7 @@ CREATE INDEX index_ip_src_defaultip ON "wire".ippacket(ip_src);
 DROP TABLE "wire".tcppacket;
 CREATE TABLE "wire".tcppacket (
   "id" bigint NOT NULL primary key,
-  "recv_date" string,
+  "recv_date" date,
   "tcp_data_len" int DEFAULT NULL,
   "tcp_dport" int DEFAULT NULL,
   "tcp_ack" char(1) DEFAULT NULL,
@@ -55,7 +55,7 @@ CREATE INDEX index_tcp_sport_defaulttcp ON "wire".tcppacket(tcp_sport);
 DROP TABLE "wire".udppacket;
 CREATE TABLE "wire".udppacket (
   "id" bigint NOT NULL primary key,
-  "recv_date" string,
+  "recv_date" date,
   "udp_dport" int,
   "udp_len" int,
   "udp_sum" char(10) DEFAULT NULL,
