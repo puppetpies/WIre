@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS `ippacket`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ippacket` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `recv_date` date DEFAULT NULL,
+  `recv_date` datetime DEFAULT NULL,
   `ip_df` varchar(5) DEFAULT NULL,
   `ip_dst` varchar(15) DEFAULT NULL,
   `ip_hlen` int(11) NOT NULL,
@@ -35,7 +35,7 @@ DROP TABLE IF EXISTS `tcppacket`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tcppacket` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `recv_date` date DEFAULT NULL,
+  `recv_date` datetime DEFAULT NULL,
   `tcp_data` blob,
   `tcp_data_len` int(10) DEFAULT NULL,
   `tcp_dport` int(5) DEFAULT NULL,
@@ -65,7 +65,7 @@ DROP TABLE IF EXISTS `udppacket`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `udppacket` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `recv_date` date DEFAULT NULL,
+  `recv_date` datetime DEFAULT NULL,
   `udp_data` blob,
   `udp_dport` int(5) DEFAULT NULL,
   `udp_len` int(10) DEFAULT NULL,
