@@ -36,6 +36,7 @@ module Wire
   dataonly = false
   bodymode = false
   filemode = false
+  hexdump = false
   dumpfile = "" # Read in a LibPcap created capture file instead of interfaces also works with the database
   separatorlen = 100_u8
   banner = "WIre version #{VERSION}\n\nUsage: WIre [options] | -h for Help\n"
@@ -49,6 +50,7 @@ module Wire
     parser.on("-d", "Filter packets where tcp data exists") { dataonly = true }
     parser.on("-b", "Body printing mode") { bodymode = true }
     parser.on("-v", "Show verbose output") { verbose  = true }
+    parser.on("-x", "Hexdump") { hexdump  = true }
     parser.on("-h", "--help", "Show help") { puts parser; exit 0 }
   end
 
@@ -92,11 +94,13 @@ module Wire
     display_option("Snaplen", snaplen)
     display_option("Verbose", verbose) 
     display_option("Dataonly", dataonly)
+    display_option("Hexdump", hexdump)
     
     unless filemode == true
       cap = Pcap::Capture.open_live(device, snaplen: snaplen, timeout_ms: timeout)
     else
-      puts " > Pcap File: #{dumpfile}".colorize(:blue)
+      print " > Pcap File: ".colorize(:blue)
+      puts "#{dumpfile}".colorize(:yellow)
       cap = Pcap::Capture.open_offline(dumpfile)
     end
     at_exit { cap.close }
@@ -106,14 +110,16 @@ module Wire
       if bodymode
         puts "%s: %s" % [pkt.packet_header, pkt.tcp_data.to_s.inspect]
       else
-        #puts pkt.to_s
-        puts "-" * separatorlen
-        puts display(pkt.src, pkt.dst)
-        puts "-" * separatorlen
-        puts pkt.inspect if verbose
-        #puts "-" * separatorlen     if verbose
-        #puts pkt.inspect  if verbose
-        #puts pkt.hexdump
+        case hexdump
+        when false
+          puts "-" * separatorlen
+          puts display(pkt.src, pkt.dst)
+          puts "-" * separatorlen
+          puts pkt.inspect if verbose
+        else
+          puts "#{pkt.packet_header} #{pkt.src} #{pkt.dst}".colorize(:yellow)
+          puts pkt.hexdump
+        end
       end
     end
   rescue err
