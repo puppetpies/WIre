@@ -26,7 +26,7 @@ module Wire
   # Connection error / banners
   CONNERR = ">> Connection error"
   CONNBANNER = ">> Connected to database on"
-  BLANKPACKET = 2
+  WHITESPACE = 2 # Default size for zero data or "" in body mode
   
   # Variables to use with Options parser
   filter   = "tcp port 80" # PCAP-FILTER(7) man page for details or TSHARK(1) via wireshark
@@ -38,6 +38,7 @@ module Wire
   bodymode = false
   filemode = false
   hexdump = false
+  whitespace = false
   dumpfile = "" # Read in a LibPcap created capture file instead of interfaces also works with the database
   separatorlen = 100_u8
   banner = "WIre version #{VERSION}\n\nUsage: WIre [options] | -h for Help\n"
@@ -51,6 +52,7 @@ module Wire
     parser.on("-d", "Filter packets where tcp data exists") { dataonly = true }
     parser.on("-b", "Body printing mode") { bodymode = true }
     parser.on("-v", "Show verbose output") { verbose  = true }
+    parser.on("-w", "We can easily manage White spaces ( diff(1) uses this as ignore all white space)") { whitespace = true }
     parser.on("-x", "Hexdump") { hexdump  = true }
     parser.on("-h", "--help", "Show help") { puts parser; exit 0 }
   end
@@ -101,7 +103,7 @@ module Wire
       cap = Pcap::Capture.open_live(device, snaplen: snaplen, timeout_ms: timeout)
     else
       print " > Pcap File: ".colorize(:blue)
-      puts "#{dumpfile}".colorize(:yellow)
+      puts "#{dumpfile}"
       cap = Pcap::Capture.open_offline(dumpfile)
     end
     at_exit { cap.close }
@@ -109,7 +111,11 @@ module Wire
     cap.loop do |pkt|
       next if dataonly && !pkt.tcp_data
       if bodymode
-        if pkt.tcp_data.to_s.inspect.size > BLANKPACKET
+        if whitespace
+          if pkt.tcp_data.to_s.inspect.size > WHITESPACE
+              puts "%s: %s" % [pkt.packet_header, pkt.tcp_data.to_s.inspect]
+          end
+        else
           puts "%s: %s" % [pkt.packet_header, pkt.tcp_data.to_s.inspect]
         end
       else
