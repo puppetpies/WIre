@@ -111,13 +111,8 @@ module Wire
     cap.loop do |pkt|
       next if dataonly && !pkt.tcp_data
       if bodymode
-        if whitespace
-          if pkt.tcp_data.to_s.inspect.size > WHITESPACE
-              puts "%s: %s" % [pkt.packet_header, pkt.tcp_data.to_s.inspect]
-          end
-        else
-          puts "%s: %s" % [pkt.packet_header, pkt.tcp_data.to_s.inspect]
-        end
+        next if whitespace && pkt.tcp_data.to_s =~ /\A\s*\Z/
+        puts "%s: %s" % [pkt.packet_header, pkt.tcp_data.to_s.inspect]
       else
         case hexdump
         when false
