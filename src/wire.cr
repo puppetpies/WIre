@@ -26,7 +26,6 @@ module Wire
   # Connection error / banners
   CONNERR = ">> Connection error"
   CONNBANNER = ">> Connected to database on"
-  WHITESPACE = 2 # Default size for zero data or "" in body mode
   
   # Variables to use with Options parser
   filter   = "tcp port 80" # PCAP-FILTER(7) man page for details or TSHARK(1) via wireshark
