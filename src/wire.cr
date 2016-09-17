@@ -51,7 +51,7 @@ module Wire
     parser.on("-d", "Filter packets where tcp data exists") { dataonly = true }
     parser.on("-b", "Body printing mode") { bodymode = true }
     parser.on("-v", "Show verbose output") { verbose  = true }
-    parser.on("-w", "We can easily manage White spaces ( diff(1) uses this as ignore all white space)") { whitespace = true }
+    parser.on("-w", "Ignore all packets that contain only white spaces") { whitespace = true }
     parser.on("-x", "Hexdump") { hexdump  = true }
     parser.on("-h", "--help", "Show help") { puts parser; exit 0 }
   end
