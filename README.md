@@ -12,6 +12,34 @@ You will need to have are shards to be installed however you should just be able
 from the bin/ directory.
 
 
+## Database support
+
+To make wire work with a database all you need is a config.json in your .Wire folder
+
+config.json - Example
+
+{
+  "driver":"mysql"
+  "host":"127.0.0.1"
+  "username":"wire"
+  "password":"dk3rbi9L"
+  "port":3306
+  "schema":"threatmonitor"
+  "tbl_ippacket":"ippacket"
+  "tbl_tcppacket":"tcppacket"
+  "tbl_udppacket":"udppacket"
+  "tbl_http_traffic_json":"http_traffic_json"
+  "tbl_http_traffic_ua":"http_traffic_ua"
+}
+
+# Schemas
+
+Please see the sql directory.
+
+MySQL and MonetDB Schemas are provided so far.
+
+# Build instructions
+
 ```
 shards update
 make
