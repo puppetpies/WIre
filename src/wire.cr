@@ -47,7 +47,7 @@ module Wire
     parser.on("-i lo", "Listen on interface") { |i| device = i }
     parser.on("-f 'tcp port 80'", "Pcap filter string. See pcap-filter(7)"  ) { |f| filter = f }
     parser.on("-s 1500", "Snapshot length"  ) { |s| snaplen = s.to_i }
-    parser.on("-o dumpfile", "Open pcap dump file") {|d| dumpfile = d; filemode = true }
+    parser.on("-r file", "Read packets from file") {|d| dumpfile = d; filemode = true }
     parser.on("-d", "Filter packets where tcp data exists") { dataonly = true }
     parser.on("-b", "Body printing mode") { bodymode = true }
     parser.on("-v", "Show verbose output") { verbose  = true }
