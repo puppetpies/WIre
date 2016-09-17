@@ -4,7 +4,7 @@
 
 CREATE DATABASE wire;
 
-GRANT INSERT, SELECT ON  wire.* TO 'wire'@'localhost' IDENTIFIED BY 'changeme';
+GRANT SELECT, INSERT, DELETE ON  wire.* TO 'wire'@'localhost' IDENTIFIED BY 'changeme';
 
 USE wire;
 
