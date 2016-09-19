@@ -15,8 +15,6 @@ require "./wire/*"
 require "pcap"
 require "json"
 require "colorize"
-require "crystal-monetdb-libmapi"
-require "mysql"
 require "option_parser"
 
 module Wire
