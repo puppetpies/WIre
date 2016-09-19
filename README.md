@@ -18,11 +18,12 @@ To make wire work with a database all you need is a config.json in your .Wire fo
 
 config.json - Example
 
+```json
 {
   "driver":"mysql"
-  "host":"127.0.0.1"
+  "host":"localhost"
   "username":"wire"
-  "password":"dk3rbi9L"
+  "password":"changeme"
   "port":3306
   "schema":"threatmonitor"
   "tbl_ippacket":"ippacket"
@@ -31,6 +32,7 @@ config.json - Example
   "tbl_http_traffic_json":"http_traffic_json"
   "tbl_http_traffic_ua":"http_traffic_ua"
 }
+```
 
 # Schemas
 
