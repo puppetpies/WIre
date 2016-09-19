@@ -35,7 +35,7 @@ module Wire
         }
       end
     else
-      abort "config.json required under #{home}"
+      abort "config.json required under #{home} see examples/"
     end
     return json_data
   end
