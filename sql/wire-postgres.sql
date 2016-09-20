@@ -1,3 +1,7 @@
+--
+--  WIre schema for Postgres tested on 9.5.4
+--
+
 CREATE USER wire WITH PASSWORD 'changeme';
 CREATE SCHEMA wire AUTHORIZATION wire;
 
