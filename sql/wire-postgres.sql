@@ -1,14 +1,9 @@
 CREATE USER wire WITH PASSWORD 'changeme';
-
-GRANT INSERT, DELETE ON ippacket TO wire;
-GRANT INSERT, DELETE ON tcppacket TO wire;
-GRANT INSERT, DELETE ON udppacket TO wire;
-
 CREATE SCHEMA wire AUTHORIZATION wire;
 
 DROP TABLE IF EXISTS wire.ippacket;
 CREATE TABLE wire.ippacket (
-  id integer UNIQUE NOT NULL
+  id integer UNIQUE NOT NULL,
   recv_date TIMESTAMP WITHOUT TIME ZONE,
   ip_df character(5) NOT NULL,
   ip_dst character(15) DEFAULT NULL,
@@ -24,13 +19,14 @@ CREATE TABLE wire.ippacket (
   ip_ttl integer NOT NULL,
   ip_ver integer NOT NULL
 );
+GRANT SELECT, INSERT, DELETE ON wire.ippacket TO wire;
 
 CREATE TYPE flags AS ENUM ('Y', 'N');
 DROP TABLE IF EXISTS wire.tcppacket;
 CREATE TABLE wire.tcppacket (
   id integer UNIQUE NOT NULL,
   recv_date TIMESTAMP WITHOUT TIME ZONE,
-  tcp_data blob,
+  tcp_data bytea,
   tcp_data_len integer DEFAULT NULL,
   tcp_dport integer DEFAULT NULL,
   tcp_ack flags DEFAULT NULL,
@@ -47,14 +43,16 @@ CREATE TABLE wire.tcppacket (
   tcp_urp character(10) DEFAULT NULL,
   tcp_win character(10) DEFAULT NULL
 );
+GRANT SELECT, INSERT, DELETE ON wire.tcppacket TO wire;
 
 DROP TABLE IF EXISTS wire.udppacket;
 CREATE TABLE wire.udppacket (
   id integer UNIQUE NOT NULL,
   recv_date TIMESTAMP WITHOUT TIME ZONE,
-  udp_data blob,
+  udp_data bytea,
   udp_dport integer DEFAULT NULL,
   udp_len integer DEFAULT NULL,
   udp_sum character(10) DEFAULT NULL,
   udp_sport integer DEFAULT NULL
 );
+GRANT SELECT, INSERT, DELETE ON wire.udppacket TO wire;
