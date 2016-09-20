@@ -22,7 +22,7 @@ module Pcap
       io << "    Data Offset       : %d words (%d bytes)\n" % [tcp_doff, length]
       io << "    Flags             : [%s]\n" % tcp_flags
       io << "      CWR: #{tcp_cwr?} ECE: #{tcp_ece?} URG: #{tcp_urg?} ACK: #{tcp_ack?}\n"
-      io << "      PUSH: #{tcp_push?} RST: #{tcp_rst?} SYN: #{tcp_syn?} FIN: #{tcp_fin?}\n" 
+      io << "      PUSH: #{tcp_push?} RST: #{tcp_rst?} SYN: #{tcp_syn?} FIN: #{tcp_fin?}\n"
     end
   end
 
