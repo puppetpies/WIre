@@ -2,7 +2,7 @@ version: 1.0
 shards:
   crystal-monetdb-libmapi:
     github: puppetpies/crystal-monetdb-libmapi
-    commit: d3254d581d493f998b178f663a4783fcaa7867ff
+    commit: 0ea14892250cc763298af35ff8f8926747580434
 
   jq:
     github: maiha/jq.cr
@@ -14,7 +14,7 @@ shards:
 
   pcap:
     github: maiha/pcap.cr
-    version: 0.2.2
+    version: 0.2.4
 
   pg:
     github: will/crystal-pg
