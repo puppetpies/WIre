@@ -1,6 +1,7 @@
 --
 --  WIre HTTP Body schema for MySQL
 --
+USE wire;
 
 DROP TABLE http_traffic_json;
 CREATE TABLE http_traffic_json (
