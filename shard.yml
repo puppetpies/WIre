@@ -17,6 +17,7 @@ development_dependencies:
     version: ~> 0.4
 
   pcap:
+    branch: master
     github: maiha/pcap.cr 
     version: ">= 0.2.1"
 
