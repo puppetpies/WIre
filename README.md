@@ -38,7 +38,7 @@ config.json - Example
 
 Please see the sql directory.
 
-MySQL and MonetDB Schemas are provided so far.
+MonetDB, MySQL & Postgres are provided so far.
 
 # Build instructions
 
