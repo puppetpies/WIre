@@ -1,3 +1,6 @@
+--
+--  WIre HTTP Body schema for MonetDB
+--
 SET SCHEMA "wire";
 
 DROP TABLE "wire".http_traffic_json;
