@@ -14,7 +14,7 @@ shards:
 
   pcap:
     github: maiha/pcap.cr
-    version: 0.2.4
+    version: 0.2.5
 
   pg:
     github: will/crystal-pg
