@@ -26,8 +26,8 @@ id INT GENERATED ALWAYS AS
            CACHE 2 CYCLE
 ) PRIMARY KEY,
   family VARCHAR(30),
-  major CHAR(10) default 'NaN',
-  minor CHAR(10) default 'NaN',
+  major CHAR(10) DEFAULT 'NaN',
+  minor CHAR(10) DEFAULT 'NaN',
   os CHAR(30) NOT NULL,
   guid CHAR(36) NOT NULL
 );
