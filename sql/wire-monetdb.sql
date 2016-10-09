@@ -8,15 +8,21 @@ ALTER USER "wire" SET SCHEMA "wire";
 
 DROP TABLE "wire".ippacket;
 CREATE TABLE "wire".ippacket (
-  "id" bigint NOT NULL primary key,
+id INT GENERATED ALWAYS AS 
+        IDENTITY (
+           START WITH 0 INCREMENT BY 1
+           NO MINVALUE NO MAXVALUE
+           CACHE 2 CYCLE
+) NOT NULL primary key,
+  "guid" CHAR(36) NOT NULL,
   "recv_date" date,
+  "recv_time" time,
   "ip_df" varchar(5),
   "ip_dst" varchar(15),
   "ip_hlen" int not null,
   "ip_id" int not null,
   "ip_len" int not null,
   "ip_mf" varchar(5),
-  "ip_off" int not null,
   "ip_proto" int not null,
   "ip_src" varchar(15),
   "ip_sum" char(10),
@@ -30,16 +36,23 @@ CREATE INDEX index_ip_src_defaultip ON "wire".ippacket(ip_src);
 
 DROP TABLE "wire".tcppacket;
 CREATE TABLE "wire".tcppacket (
-  "id" bigint NOT NULL primary key,
+id INT GENERATED ALWAYS AS 
+        IDENTITY (
+           START WITH 0 INCREMENT BY 1
+           NO MINVALUE NO MAXVALUE
+           CACHE 2 CYCLE
+) NOT NULL primary key,
+  "guid" CHAR(36) NOT NULL,
   "recv_date" date,
+  "recv_time" time,
   "tcp_data_len" int DEFAULT NULL,
   "tcp_dport" int DEFAULT NULL,
-  "tcp_ack" char(1) DEFAULT NULL,
-  "tcp_fin" char(1) DEFAULT NULL,
-  "tcp_syn" char(1)DEFAULT NULL,
-  "tcp_rst" char(1) DEFAULT NULL,
-  "tcp_psh" char(1) DEFAULT NULL,
-  "tcp_urg" char(1) DEFAULT NULL,
+  "tcp_ack" char(5) DEFAULT NULL,
+  "tcp_fin" char(5) DEFAULT NULL,
+  "tcp_syn" char(5) DEFAULT NULL,
+  "tcp_rst" char(5) DEFAULT NULL,
+  "tcp_psh" char(5) DEFAULT NULL,
+  "tcp_urg" char(5) DEFAULT NULL,
   "tcp_off" int DEFAULT NULL,
   "tcp_hlen" int DEFAULT NULL,
   "tcp_seq" bigint DEFAULT NULL,
@@ -54,8 +67,15 @@ CREATE INDEX index_tcp_sport_defaulttcp ON "wire".tcppacket(tcp_sport);
 
 DROP TABLE "wire".udppacket;
 CREATE TABLE "wire".udppacket (
-  "id" bigint NOT NULL primary key,
+id INT GENERATED ALWAYS AS 
+        IDENTITY (
+           START WITH 0 INCREMENT BY 1
+           NO MINVALUE NO MAXVALUE
+           CACHE 2 CYCLE
+) NOT NULL primary key,
+  "guid" CHAR(36) NOT NULL,
   "recv_date" date,
+  "recv_time" time,
   "udp_dport" int,
   "udp_len" int,
   "udp_sum" char(10) DEFAULT NULL,
