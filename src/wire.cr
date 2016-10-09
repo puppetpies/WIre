@@ -21,6 +21,7 @@ require "pcap"
 require "json"
 require "colorize"
 require "option_parser"
+require "secure_random"
 
 module Wire
   # Connection error / banners
@@ -55,37 +56,60 @@ module Wire
     parser.on("-x", "Hexdump") { hexdump  = true }
     parser.on("-h", "--help", "Show help") { puts parser; exit 0 }
   end
+  
+  def self.ip(schema : String, guid : String, tbl : String, ip_dst : String, ip_hlen : Number, ip_id : Number, ip_len : Number, ip_proto : Number, ip_src : String, ip_sum : Number, ip_tos : Number, ip_ttl : Number, ip_ver : Number)
+    io = "INSERT INTO #{schema}.#{tbl} "
+    io += "(guid, recv_date, recv_time, ip_dst, ip_hlen, ip_id, ip_len, ip_proto, ip_src, ip_sum, ip_tos, ip_ttl, ip_ver) "
+    io += "VALUES ("
+    io += "'#{guid}', "
+    io += "NOW(), "
+    io += "NOW(), "
+    io += "'#{ip_dst}',"
+    io += "'#{ip_hlen}',"
+    io += "'#{ip_id}',"
+    io += "'#{ip_len}',"
+    io += "'#{ip_proto}',"
+    io += "'#{ip_src}',"
+    io += "'#{ip_sum}',"
+    io += "'#{ip_tos}',"
+    io += "'#{ip_ttl}',"
+    io += "'#{ip_ver}');"
+  end
+  
+  def self.tcp(schema : String, guid : String, tbl : String, tcp_data_len : Int32, tcp_dst : UInt16, tcp_ack : Bool, tcp_fin : Bool, tcp_syn : Bool, tcp_rst : Bool, tcp_psh : Bool, tcp_urg : Bool, tcp_off : Int32, tcp_hlen : Int32, tcp_seq : UInt32, tcp_sum : UInt16, tcp_src : UInt16, tcp_win : UInt16)
+    io = "INSERT INTO #{schema}.#{tbl} "
+    io += "(guid, recv_date, recv_time, tcp_data_len, tcp_dport, tcp_ack, tcp_fin, tcp_syn, tcp_rst, tcp_psh, tcp_urg, tcp_off, tcp_hlen, tcp_seq, tcp_sum, tcp_sport, tcp_win) "
+    io += "VALUES ("
+    io += "'#{guid}', "
+    io += "NOW(), "
+    io += "NOW(), "
+    io += "#{tcp_data_len},"
+    io += "#{tcp_dst},"
+    io += "'#{tcp_ack}',"
+    io += "'#{tcp_fin}',"
+    io += "'#{tcp_syn}',"
+    io += "'#{tcp_rst}',"
+    io += "'#{tcp_psh}',"
+    io += "'#{tcp_urg}',"
+    io += "#{tcp_off}, #{tcp_hlen}, #{tcp_seq}, #{tcp_sum}, #{tcp_dst}, #{tcp_win});"
+  end
 
   begin
     config_json_data = Wire.load_config # Read the json config of your DB details
     j = Jq.new(config_json_data)
     case j[".driver"].as_s
     when "monetdb"
-      conn = MonetDB::ClientJSON.new
+      conn = MonetDB::Client.new
       conn.host = j[".host"].as_s
       conn.port = j[".port"].as_i
       conn.username = j[".username"].as_s
       conn.password = j[".password"].as_s
-      conn.db = j[".schema"].as_s
+      conn.db = j[".db"].as_s
       conn.connect
+      conn.setAutocommit(true)
       p conn
-      if conn.is_connected?
-        Wire.dbbanner("#{j[".host"].as_s}", "#{j[".port"].as_i}", "#{j[".username"].as_s}")
-      else
-        abort CONNERR.colorize(:red)
-      end
-    when "mysql"
-      conn = MySQL.connect(j[".host"].as_s, 
-                           j[".username"].as_s, 
-                           j[".password"].as_s, j[".schema"].as_s, j[".port"].as_i, nil)
-      p conn 
-      if conn
-        Wire.dbbanner("#{j[".host"].as_s}", "#{j[".port"].as_i}", "#{j[".username"].as_s}")
-      else
-        abort CONNERR.colorize(:red)
-      end
     else
-      false
+      conn = MonetDB::Client.new
     end
     opts.parse!
     puts banner.colorize(:cyan)
@@ -107,12 +131,23 @@ module Wire
     end
     at_exit { cap.close }
     cap.setfilter(filter)
+    pktcount = 0
     cap.loop do |pkt|
       next if dataonly && !pkt.tcp_data
       if bodymode
         next if whitespace && pkt.tcp_data.to_s =~ /\A\s*\Z/
         puts "%s: %s" % [pkt.packet_header, pkt.tcp_data.to_s.inspect]
       else
+        # Data capture
+        sameuuid = SecureRandom.uuid
+        sql_ip = ip("#{j[".schema"].as_s}", sameuuid, "#{j[".tbl_ippacket"].as_s}", pkt.ip_dst, pkt.ip_hl, pkt.ip_id, pkt.ip_len, pkt.ip_proto, pkt.ip_src, pkt.ip_sum, pkt.ip_tos, pkt.ip_ttl, pkt.ip_v)
+        sql_tcp = tcp("#{j[".schema"].as_s}", sameuuid, "#{j[".tbl_tcppacket"].as_s}", pkt.tcp_data_len, pkt.tcp_dst, pkt.tcp_ack?, pkt.tcp_fin?, pkt.tcp_syn?, pkt.tcp_rst?, pkt.tcp_push?, pkt.tcp_urg?, pkt.tcp_doff, pkt.tcp_hlen, pkt.tcp_seq, pkt.tcp_sum, pkt.tcp_src, pkt.tcp_win)
+        puts "#{pktcount}: IP: #{sql_ip}"
+        puts "#{pktcount}: TCP: #{sql_tcp}"
+        pktcount += 1
+        conn.query(sql_ip)
+        conn.query(sql_tcp)
+        puts "-" * separatorlen
         case hexdump
         when false
           puts "-" * separatorlen
