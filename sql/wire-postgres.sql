@@ -26,7 +26,7 @@ CREATE TABLE wire.ippacket (
 );
 GRANT SELECT, INSERT, DELETE ON wire.ippacket TO wire;
 
-CREATE TYPE flags AS ENUM ('Y', 'N');
+CREATE TYPE flags AS ENUM ('true', 'false');
 DROP TABLE IF EXISTS wire.tcppacket;
 CREATE TABLE wire.tcppacket (
   id integer UNIQUE NOT NULL,
