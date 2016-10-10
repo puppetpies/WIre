@@ -26,8 +26,9 @@ CREATE TABLE wire.ippacket (
 );
 GRANT SELECT, INSERT, DELETE ON wire.ippacket TO wire;
 
-CREATE TYPE flags AS ENUM ('true', 'false');
 DROP TABLE IF EXISTS wire.tcppacket;
+DROP TYPE IF EXISTS flags;
+CREATE TYPE flags AS ENUM ('true', 'false');
 CREATE TABLE wire.tcppacket (
   id integer UNIQUE NOT NULL,
   recv_date TIMESTAMP WITHOUT TIME ZONE,
