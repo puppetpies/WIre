@@ -1,0 +1,16 @@
+{
+  "driver":"postgres"
+  "host":"localhost"
+  "username":"wire"
+  "password":"changeme"
+  "port":5432
+  "schema":"wire"
+  "db":"wire"
+  "commit_interval":3000
+  "tbl_ippacket":"ippacket"
+  "tbl_tcppacket":"tcppacket"
+  "tbl_udppacket":"udppacket"
+  "tbl_http_traffic_json":"http_traffic_json"
+  "tbl_http_traffic_ua":"http_traffic_ua"
+}
+
