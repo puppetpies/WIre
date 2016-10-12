@@ -8,17 +8,17 @@ CREATE SCHEMA wire AUTHORIZATION wire;
 
 DROP TABLE IF EXISTS wire.ippacket;
 CREATE TABLE wire.ippacket (
-  id integer UNIQUE NOT NULL,
+  id SERIAL,
   guid char(36) NOT NULL,
   recv_date DATE,
-  recv_time TIMESTAMP WITHOUT TIME ZONE,
-  ip_df VARCHAR(5) NOT NULL,
+  recv_time TIME,
+  ip_df VARCHAR(5),
   ip_dst VARCHAR(15) DEFAULT NULL,
   ip_hlen integer NOT NULL,
   ip_id integer NOT NULL,
   ip_len integer NOT NULL,
   ip_mf VARCHAR(5) DEFAULT NULL,
-  ip_off integer NOT NULL,
+  ip_off integer,
   ip_proto integer NOT NULL,
   ip_src VARCHAR(15) DEFAULT NULL,
   ip_sum VARCHAR(10) DEFAULT NULL,
@@ -32,10 +32,10 @@ DROP TABLE IF EXISTS wire.tcppacket;
 DROP TYPE IF EXISTS flags;
 CREATE TYPE flags AS ENUM ('true', 'false');
 CREATE TABLE wire.tcppacket (
-  id integer UNIQUE NOT NULL,
+  id SERIAL,
   guid char(36) NOT NULL,
   recv_date DATE,
-  recv_time TIMESTAMP WITHOUT TIME ZONE,
+  recv_time TIME,
   tcp_data bytea,
   tcp_data_len integer DEFAULT NULL,
   tcp_dport integer DEFAULT NULL,
@@ -57,10 +57,10 @@ GRANT SELECT, INSERT, DELETE ON wire.tcppacket TO wire;
 
 DROP TABLE IF EXISTS wire.udppacket;
 CREATE TABLE wire.udppacket (
-  id integer UNIQUE NOT NULL,
+  id SERIAL,
   guid char(36) NOT NULL,
   recv_date DATE,
-  recv_time TIMESTAMP WITHOUT TIME ZONE,
+  recv_time TIME,
   udp_data bytea,
   udp_dport integer DEFAULT NULL,
   udp_len integer DEFAULT NULL,
