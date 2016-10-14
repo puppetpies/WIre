@@ -7,6 +7,10 @@
 -- ------------------------------------------------------
 -- Server version	10.0.17-MariaDB-log
 
+CREATE DATABASE wire;
+GRANT SELECT, INSERT, DELETE ON  wire.* TO 'wire'@'localhost' IDENTIFIED BY 'changeme';
+USE wire;
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
