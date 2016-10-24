@@ -17,8 +17,8 @@ development_dependencies:
     version: ~> 0.4
 
   pcap:
-    branch: master
-    github: maiha/pcap.cr 
+    branch: devel 
+    github: puppetpies/pcap.cr 
     version: ">= 0.2.1"
 
   jq:
