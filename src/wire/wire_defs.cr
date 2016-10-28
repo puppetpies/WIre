@@ -3,7 +3,7 @@ module Wire
   CONNERR = ">> Connection error"
   CONNBANNER = ">> Connected to database on"
   
-  @@configfile = "config-postgres.json"
+  @@configfile = "config.json"
 
   # Database functions
   def self.ip(schema : String, guid : String, tbl : String, ip_dst : String, ip_hlen : Number, ip_id : Number, ip_len : Number, ip_proto : Number, ip_src : String, ip_sum : Number, ip_tos : Number, ip_ttl : Number, ip_ver : Number)
