@@ -60,27 +60,26 @@ module Wire
     config_json_data = Wire.load_config # Read the json config of your DB details
     j = Jq.new(config_json_data)
     commit_after = j[".commit_interval"].as_i # How many records before commit
-    driver = j[".driver"].as_s
-    case driver
+    case j[".driver"].as_s
     when "monetdb"
-    # MonetDB
-    conn = MonetDB::Client.new
-    conn.connect(j[".host"].as_s, j[".username"].as_s, j[".password"].as_s, j[".db"].as_s, j[".port"].as_i)
-    conn.setAutocommit(false)
-    #p conn
+      # MonetDB
+      conn = MonetDB::Client.new
+      conn.connect(j[".host"].as_s, j[".username"].as_s, j[".password"].as_s, j[".db"].as_s, j[".port"].as_i)
+      conn.setAutocommit(false)
+      p conn if verbose
     when "mysql"
-    # MySQL
-    conn = MySQL.connect(j[".host"].as_s, j[".username"].as_s, j[".password"].as_s, j[".db"].as_s, j[".port"].as_i, "/run/mysqld/mysqld.sock")
-    p conn
+      # MySQL
+      conn = MySQL.connect(j[".host"].as_s, j[".username"].as_s, j[".password"].as_s, j[".db"].as_s, j[".port"].as_i, j[".socket"].as_s)
+      p conn if verbose
     when "postgres"
-    # Postgres
-    conninfo = PQ::ConnInfo.new(j[".host"].as_s, j[".db"].as_s, j[".username"].as_s, j[".password"].as_s, j[".port"].as_i)
-    conn = PG.connect(conninfo)
-    p conn
+      # Postgres
+      conninfo = PQ::ConnInfo.new(j[".host"].as_s, j[".db"].as_s, j[".username"].as_s, j[".password"].as_s, j[".port"].as_i)
+      conn = PG.connect(conninfo)
+      p conn if verbose
     else
-    # Default MySQL
-    conn = MySQL.connect(j[".host"].as_s, j[".username"].as_s, j[".password"].as_s, j[".db"].as_s, j[".port"].as_i, "/run/mysqld/mysqld.sock")
-    p conn
+      # Default MySQL
+      conn = MySQL.connect(j[".host"].as_s, j[".username"].as_s, j[".password"].as_s, j[".db"].as_s, j[".port"].as_i, j[".socket"].as_s)
+      p conn if verbose
     end
     opts.parse!
     puts banner.colorize(:cyan)
