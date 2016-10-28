@@ -83,7 +83,7 @@ module Wire
   end
 
   # Display modes
-  def self.display(src : String, dst : String, tcp_ack : Bool, tcp_fin : Bool, tcp_syn : Bool, tcp_rst : Bool, tcp_push : Bool, tcp_urg : Bool, tcp_doff : Int32, tcp_hlen : Int32, tcp_seq : UInt32, tcp_sum : UInt16, tcp_win : UInt16, data : Bool)
+  def self.display(src : String, dst : String, tcp_ack : Bool, tcp_fin : Bool, tcp_syn : Bool, tcp_rst : Bool, tcp_push : Bool, tcp_urg : Bool, tcp_doff : Int32, tcp_hlen : Int32, tcp_seq : UInt32, tcp_sum : UInt16, tcp_win : UInt16, hasdata : Bool)
     io = "#{Time.now.to_s} "
     io += "IP Src: #{src.colorize(:white)} "
     io += "IP Dst: #{dst.colorize(:white)} "
@@ -98,7 +98,7 @@ module Wire
     io += "Sequence Num: #{tcp_seq.colorize(:white)} "
     io += "Checksum: #{tcp_sum.colorize(:white)} "
     io += "Window Size: #{tcp_win.colorize(:white)} "
-    io += "Has Data?: #{data} "
+    io += "Has Data?: #{hasdata} "
   end
 
   def self.display(name : String, var : String | Bool | Int32)
