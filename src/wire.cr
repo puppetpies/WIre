@@ -4,7 +4,7 @@
 # Name: WIre
 # Email: <brianh6854@googlemail.com>                                   #
 # 
-# Description: Packet Capture in Crystal
+# Description: Packet Capture in pure Crystal
 #
 #   Thankyou to maiha github.com/maiha for extending my lowevel pcap
 #   support for this functionality and accepting a few tweaks.
@@ -60,6 +60,7 @@ module Wire
     config_json_data = Wire.load_config # Read the json config of your DB details
     j = Jq.new(config_json_data)
     commit_after = j[".commit_interval"].as_i # How many records before commit
+    # conn is a union type of 3 Database drivers MySQL / Postgres & MonetDB
     case j[".driver"].as_s
     when "monetdb"
       # MonetDB
@@ -121,11 +122,11 @@ module Wire
         when false
           case pkt.tcp_data.to_s.size
           when 0
-            data = false
+            hasdata = false
           else
-            data = true
+            hasdata = true
           end
-          puts display(pkt.src, pkt.dst, pkt.tcp_ack?, pkt.tcp_fin?, pkt.tcp_syn?, pkt.tcp_rst?, pkt.tcp_push?, pkt.tcp_urg?, pkt.tcp_doff, pkt.tcp_hlen, pkt.tcp_seq, pkt.tcp_sum, pkt.tcp_win, data) unless quiet
+          puts display(pkt.src, pkt.dst, pkt.tcp_ack?, pkt.tcp_fin?, pkt.tcp_syn?, pkt.tcp_rst?, pkt.tcp_push?, pkt.tcp_urg?, pkt.tcp_doff, pkt.tcp_hlen, pkt.tcp_seq, pkt.tcp_sum, pkt.tcp_win, hasdata) unless quiet
           puts "-" * separatorlen unless quiet
           puts pkt.inspect if verbose
         else
