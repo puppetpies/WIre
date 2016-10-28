@@ -10,7 +10,8 @@ development_dependencies:
     version: ">= 0.1.1"
   
   pg:
-    github: will/crystal-pg
+    branch: macroforqueryorexec
+    github: puppetpies/crystal-pg
 
   mysql:
     github: waterlink/crystal-mysql

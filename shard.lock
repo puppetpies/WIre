@@ -17,6 +17,6 @@ shards:
     commit: 3be4535bd0e16718157fcac07fdb19a911866ac1
 
   pg:
-    github: will/crystal-pg
-    version: 0.11.0
+    github: puppetpies/crystal-pg
+    commit: 6b8089d34a29233ba199b40ef3249897a8dbe7e6
 

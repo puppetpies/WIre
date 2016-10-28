@@ -61,22 +61,27 @@ module Wire
     j = Jq.new(config_json_data)
     commit_after = j[".commit_interval"].as_i # How many records before commit
     driver = j[".driver"].as_s
-    
+    case driver
+    when "monetdb"
     # MonetDB
-    #conn = MonetDB::Client.new
-    #conn.connect(j[".host"].as_s, j[".username"].as_s, j[".password"].as_s, j[".db"].as_s, j[".port"].as_i)
-    #conn.setAutocommit(false)
+    conn = MonetDB::Client.new
+    conn.connect(j[".host"].as_s, j[".username"].as_s, j[".password"].as_s, j[".db"].as_s, j[".port"].as_i)
+    conn.setAutocommit(false)
     #p conn
-    
+    when "mysql"
     # MySQL
-    #conn = MySQL.connect(j[".host"].as_s, j[".username"].as_s, j[".password"].as_s, j[".db"].as_s, j[".port"].as_i)
-    #p conn
-    
+    conn = MySQL.connect(j[".host"].as_s, j[".username"].as_s, j[".password"].as_s, j[".db"].as_s, j[".port"].as_i, "/run/mysqld/mysqld.sock")
+    p conn
+    when "postgres"
     # Postgres
     conninfo = PQ::ConnInfo.new(j[".host"].as_s, j[".db"].as_s, j[".username"].as_s, j[".password"].as_s, j[".port"].as_i)
     conn = PG.connect(conninfo)
     p conn
-    
+    else
+    # Default MySQL
+    conn = MySQL.connect(j[".host"].as_s, j[".username"].as_s, j[".password"].as_s, j[".db"].as_s, j[".port"].as_i, "/run/mysqld/mysqld.sock")
+    p conn
+    end
     opts.parse!
     puts banner.colorize(:cyan)
     puts "Starting up!".colorize(:red)
@@ -111,8 +116,8 @@ module Wire
         sql_tcp = tcp("#{j[".schema"].as_s}", sameuuid, "#{j[".tbl_tcppacket"].as_s}", pkt.tcp_data_len, pkt.tcp_dst, pkt.tcp_ack?, pkt.tcp_fin?, pkt.tcp_syn?, pkt.tcp_rst?, pkt.tcp_push?, pkt.tcp_urg?, pkt.tcp_doff, pkt.tcp_hlen, pkt.tcp_seq, pkt.tcp_sum, pkt.tcp_src, pkt.tcp_win)
         puts "#{glbpktcount}: IP: #{sql_ip}" if verbose
         puts "#{glbpktcount}: TCP: #{sql_tcp}" if verbose
-        conn.exec(sql_ip)
-        conn.exec(sql_tcp)
+        conn.query(sql_ip)
+        conn.query(sql_tcp)
         case hexdump
         when false
           case pkt.tcp_data.to_s.size
@@ -131,7 +136,7 @@ module Wire
       end
       if commit_after == pktcount
         begin
-          conn.exec("COMMIT;")
+          conn.query("COMMIT;")
           puts "Commit #{pktcount} !".colorize(:yellow) if verbose
           pktcount = 0
         rescue
@@ -142,7 +147,7 @@ module Wire
       pktcount += 1
     end
     at_exit { 
-      conn.exec("COMMIT;")
+      conn.query("COMMIT;")
       cap.close 
       print "Total Packets: "
       print "#{glbpktcount}".colorize(:white)
