@@ -4,6 +4,7 @@
   "username":"wire"
   "password":"changme"
   "port":3306
+  "socket":"/run/mysqld/mysqld.sock"
   "schema":"wire"
   "db":"wire"
   "commit_interval":3000
