@@ -5,6 +5,12 @@ module Wire
   
   @@configfile = "config.json"
 
+  # Dummy DB Driver for case else
+  class DummyDriver
+    def initialize; end
+    def query(text); true; end
+  end
+  
   # Database functions
   def self.ip(schema : String, guid : String, tbl : String, ip_dst : String, ip_hlen : Number, ip_id : Number, ip_len : Number, ip_proto : Number, ip_src : String, ip_sum : Number, ip_tos : Number, ip_ttl : Number, ip_ver : Number)
     io = "INSERT INTO #{schema}.#{tbl} "
