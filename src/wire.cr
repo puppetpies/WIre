@@ -78,9 +78,8 @@ module Wire
       conn = PG.connect(conninfo)
       p conn if verbose
     else
-      # Default MySQL
-      conn = MySQL.connect(j[".host"].as_s, j[".username"].as_s, j[".password"].as_s, j[".db"].as_s, j[".port"].as_i, j[".socket"].as_s)
-      p conn if verbose
+      # Dummy
+      conn = Wire::DummyDriver.new
     end
     opts.parse!
     puts banner.colorize(:cyan)
