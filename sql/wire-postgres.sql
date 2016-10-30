@@ -27,6 +27,7 @@ CREATE TABLE wire.ippacket (
   ip_ver integer NOT NULL
 );
 GRANT SELECT, INSERT, DELETE ON wire.ippacket TO wire;
+CREATE UNIQUE INDEX ippacket_guid ON wire.ippacket (guid);
 
 DROP TABLE IF EXISTS wire.tcppacket;
 DROP TYPE IF EXISTS flags;
@@ -54,6 +55,7 @@ CREATE TABLE wire.tcppacket (
   tcp_win VARCHAR(10) DEFAULT NULL
 );
 GRANT SELECT, INSERT, DELETE ON wire.tcppacket TO wire;
+CREATE UNIQUE INDEX tcppacket_guid ON wire.tcppacket (guid);
 
 DROP TABLE IF EXISTS wire.udppacket;
 CREATE TABLE wire.udppacket (
@@ -68,3 +70,4 @@ CREATE TABLE wire.udppacket (
   udp_sport integer DEFAULT NULL
 );
 GRANT SELECT, INSERT, DELETE ON wire.udppacket TO wire;
+CREATE UNIQUE INDEX udppacket_guid ON wire.udppacket (guid);
