@@ -147,6 +147,7 @@ module Wire
     end
     at_exit { 
       conn.query("COMMIT;")
+      puts "Packets commited before exit: #{pktcount}"
       cap.close 
       print "Total Packets: "
       print "#{glbpktcount}".colorize(:white)
