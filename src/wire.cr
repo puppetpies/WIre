@@ -49,7 +49,7 @@ module Wire
     parser.on("-d", "Filter packets where tcp data exists") { dataonly = true }
     parser.on("-b", "Body printing mode") { bodymode = true }
     parser.on("-v", "Show verbose output") { verbose  = true }
-    parser.on("-w", "Ignore all packets that contain only white spaces") { whitespace = true }
+    parser.on("-1", "Ignore all packets that contain only white spaces") { whitespace = true }
     parser.on("-x", "Hexdump") { hexdump  = true }
     parser.on("-q", "Quiet") { quiet = true }
     parser.on("-h", "--help", "Show help") { puts parser; exit 0 }
@@ -91,6 +91,8 @@ module Wire
     display("Verbose", verbose) 
     display("Dataonly", dataonly)
     display("Hexdump", hexdump)
+    display("File Mode", filemode)
+    display("Ignore Whitespace", whitespace) 
     
     unless filemode == true
       cap = Pcap::Capture.open_live(device, snaplen: snaplen, timeout_ms: timeout)
