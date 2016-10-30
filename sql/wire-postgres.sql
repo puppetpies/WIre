@@ -28,6 +28,7 @@ CREATE TABLE wire.ippacket (
 );
 GRANT SELECT, INSERT, DELETE ON wire.ippacket TO wire;
 CREATE UNIQUE INDEX ippacket_guid ON wire.ippacket (guid);
+CREATE UNIQUE INDEX ippacket_id ON wire.ippacket (id);
 
 DROP TABLE IF EXISTS wire.tcppacket;
 DROP TYPE IF EXISTS flags;
@@ -56,6 +57,7 @@ CREATE TABLE wire.tcppacket (
 );
 GRANT SELECT, INSERT, DELETE ON wire.tcppacket TO wire;
 CREATE UNIQUE INDEX tcppacket_guid ON wire.tcppacket (guid);
+CREATE UNIQUE INDEX tcppacket_id ON wire.tcppacket (id);
 
 DROP TABLE IF EXISTS wire.udppacket;
 CREATE TABLE wire.udppacket (
@@ -71,3 +73,4 @@ CREATE TABLE wire.udppacket (
 );
 GRANT SELECT, INSERT, DELETE ON wire.udppacket TO wire;
 CREATE UNIQUE INDEX udppacket_guid ON wire.udppacket (guid);
+CREATE UNIQUE INDEX udppacket_id ON wire.udppacket (id);
