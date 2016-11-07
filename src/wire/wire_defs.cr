@@ -46,9 +46,22 @@ module Wire
     io += "'#{tcp_rst}',"
     io += "'#{tcp_psh}',"
     io += "'#{tcp_urg}',"
-    io += "#{tcp_off}, #{tcp_hlen}, #{tcp_seq}, #{tcp_sum}, #{tcp_dst}, #{tcp_win});"
+    io += "#{tcp_off}, #{tcp_hlen}, #{tcp_seq}, #{tcp_sum}, #{tcp_src}, #{tcp_win});"
   end
-
+  
+  def self.udp(schema : String, guid : String, tbl : String, udp_dst : UInt16, udp_len : UInt16, udp_sum : UInt16, udp_src)
+    io = "INSERT INTO #{schema}.#{tbl} "
+    io += "(guid, recv_date, recv_time, udp_dport, udp_len, udp_sum, udp_sport) "
+    io += "VALUES ("
+    io += "'#{guid}, "
+    io += "NOW(), "
+    io += "NOW(), "
+    io += "#{udp_dst}, "
+    io += "#{udp_len}, "
+    io += "#{udp_sum}, "
+    io += "#{udp_sport});"
+  end
+   
   # Tools / Config
   def self.check_permission?
     perm = %x(id -u)[0..0].to_i
