@@ -59,7 +59,7 @@ module Wire
     io += "#{udp_dst}, "
     io += "#{udp_len}, "
     io += "#{udp_sum}, "
-    io += "#{udp_sport});"
+    io += "#{udp_src});"
   end
    
   # Tools / Config
