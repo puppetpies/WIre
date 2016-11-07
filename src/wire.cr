@@ -92,7 +92,7 @@ module Wire
     display("Dataonly", dataonly)
     display("Hexdump", hexdump)
     display("File Mode", filemode)
-    display("Ignore Whitespace", whitespace) 
+    display("Ignore Whitespace", whitespace)
     
     unless filemode == true
       cap = Pcap::Capture.open_live(device, snaplen: snaplen, timeout_ms: timeout)
@@ -147,6 +147,7 @@ module Wire
       glbpktcount += 1
       pktcount += 1
     end
+    # TODO: At exit / Sig INT / Ctrl+C trap issue
     at_exit { 
       conn.query("COMMIT;")
       puts "Packets commited before exit: #{pktcount}"
