@@ -1,7 +1,17 @@
 module Wire
+  # Version info
+  module VERSION
+    MAJOR = 0
+    MINOR = 2
+    TINY =  0
+    CODENAME = ""
+    STRING = [MAJOR, MINOR, TINY].join('.')
+  end
+  
   # Connection error / banners
   CONNERR = ">> Connection error"
   CONNBANNER = ">> Connected to database on"
+  FILEERR = "Failed to create pid file privilege error !"
   
   @@configfile = "config.json"
 
@@ -126,14 +136,23 @@ module Wire
   end
   
   # PID Functions
+  # > Gives just an INFO style error
   def self.createpid
-    File.open("/var/run/wire.pid", "w") {|n|
-      n.print("#{Process.pid}")
-    }
+    begin
+      File.open("/var/run/wire.pid", "w") {|n|
+        n.print("#{Process.pid}")
+      }
+    rescue
+      puts FILEERR
+    end
   end
   
   def self.removepid
-    File.delete("/var/run/wire.pid")
+    begin
+      File.delete("/var/run/wire.pid")
+    rescue
+      puts FILEERR
+    end
   end
   
 end

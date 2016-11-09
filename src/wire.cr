@@ -38,7 +38,7 @@ module Wire
   quiet = false
   dumpfile = "" # Read in a LibPcap created capture file instead of interfaces also works with the database
   separatorlen = 100_u8
-  banner = "WIre version #{VERSION}\n\nUsage: WIre [options] | -h for Help\n"
+  banner = "WIre version #{VERSION::STRING}\n\nUsage: WIre [options] | -h for Help\n"
   
   opts = OptionParser.new do |parser|
     parser.banner = banner
