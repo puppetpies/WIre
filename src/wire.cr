@@ -38,7 +38,7 @@ module Wire
   quiet = false
   dumpfile = "" # Read in a LibPcap created capture file instead of interfaces also works with the database
   separatorlen = 100_u8
-  banner = "WIre version #{VERSION::STRING}\n\nUsage: WIre [options] | -h for Help\n"
+  banner = "WIre version #{VERSION::STRING} (#{VERSION::CODENAME})\n\nUsage: WIre [options] | -h for Help\n"
   
   opts = OptionParser.new do |parser|
     parser.banner = banner
@@ -54,6 +54,7 @@ module Wire
     parser.on("-q", "Quiet") { quiet = true }
     parser.on("-h", "--help", "Show help") { puts parser; exit 0 }
   end
+  opts.parse!
   
   begin
     self.createpid # Create process id
@@ -78,10 +79,14 @@ module Wire
       conn = PG.connect(conninfo)
       p conn if verbose
     else
-      # Dummy
+      # Dummy driver when set to none or other
       conn = Wire::DummyDriver.new
     end
-    opts.parse!
+    unless conn == nil || conn == false
+      # Use Dummy Driver for failed DB Connect issue
+      puts "Database connection to #{j[".driver"].as_s} failed ?".colorize(:red)
+      conn = Wire::DummyDriver.new
+    end
     puts banner.colorize(:cyan)
     puts "Starting up!".colorize(:red)
     puts "============\n".colorize(:red)

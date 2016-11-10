@@ -3,8 +3,8 @@ module Wire
   module VERSION
     MAJOR = 0
     MINOR = 2
-    TINY =  0
-    CODENAME = ""
+    TINY =  1
+    CODENAME = "The Mad Man has done it !"
     STRING = [MAJOR, MINOR, TINY].join('.')
   end
   
