@@ -23,9 +23,16 @@ require "option_parser"
 require "secure_random"
 
 module Wire
-  
+  # Load configuration file
+  config_json_data = Wire.load_config # Read the json config of your DB details
+  j = Jq.new(config_json_data)
+
   # Variables to use with Options parser
-  filter   = "tcp port 80" # PCAP-FILTER(7) man page for details or TSHARK(1) via wireshark
+  begin
+    filter = j[".default_filter"].as_s # PCAP-FILTER(7) man page for details or TSHARK(1) via wireshark
+  rescue Jq::NotFound
+    filter = "" # No filter wide open
+  end
   device   = "lo" # Interface name default to your local loopback
   snaplen  = 1500 # Default size 1500 like every other capture tool the max is 65535
   timeout  = 1000 # Not implemented in my tool but it limits the number of seconds to capture for ?
@@ -58,8 +65,6 @@ module Wire
   
   begin
     self.createpid # Create process id
-    config_json_data = Wire.load_config # Read the json config of your DB details
-    j = Jq.new(config_json_data)
     commit_after = j[".commit_interval"].as_i # How many records before commit
     # conn is a union type of 3 Database drivers MySQL / Postgres & MonetDB
     case j[".driver"].as_s
@@ -84,8 +89,7 @@ module Wire
     end
     unless conn == nil || conn == false
       # Use Dummy Driver for failed DB Connect issue
-      puts "Database connection to #{j[".driver"].as_s} failed ?".colorize(:red)
-      conn = Wire::DummyDriver.new
+      conn = Wire::DummyDriver.new unless PG::Connection
     end
     puts banner.colorize(:cyan)
     puts "Starting up!".colorize(:red)
