@@ -1,4 +1,5 @@
 {
+  "default_filter":"tcp port 3128 or tcp port 80"
   "driver":"mysql"
   "host":"localhost"
   "username":"wire"
