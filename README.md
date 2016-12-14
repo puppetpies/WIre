@@ -20,16 +20,16 @@ config.json - Example
 
 ```json
 {
-  "driver":"mysql"
-  "host":"localhost"
-  "username":"wire"
-  "password":"changeme"
-  "port":3306
-  "schema":"threatmonitor"
-  "tbl_ippacket":"ippacket"
-  "tbl_tcppacket":"tcppacket"
-  "tbl_udppacket":"udppacket"
-  "tbl_http_traffic_json":"http_traffic_json"
+  "driver":"mysql",
+  "host":"localhost",
+  "username":"wire",
+  "password":"changeme",
+  "port":3306,
+  "schema":"threatmonitor",
+  "tbl_ippacket":"ippacket",
+  "tbl_tcppacket":"tcppacket",
+  "tbl_udppacket":"udppacket",
+  "tbl_http_traffic_json":"http_traffic_json",
   "tbl_http_traffic_ua":"http_traffic_ua"
 }
 ```
