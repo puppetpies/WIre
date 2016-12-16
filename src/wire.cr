@@ -115,6 +115,16 @@ module Wire
     pktcount = 0
     glbpktcount = 0
     cap.loop do |pkt|
+      # Capture SIGINT and commit data before exit
+      Signal::INT.trap {
+        conn.query("COMMIT;")
+        puts "Packets commited before exit: #{pktcount}"
+        cap.close 
+        print "Total Packets: "
+        print "#{glbpktcount}".colorize(:white)
+        self.removepid # Delete process id file
+        puts "\nBye!"
+      }
       next if dataonly && !pkt.tcp_data
       if bodymode
         next if whitespace && pkt.tcp_data.to_s =~ /\A\s*\Z/
@@ -156,16 +166,6 @@ module Wire
       glbpktcount += 1
       pktcount += 1
     end
-    # TODO: At exit / Sig INT / Ctrl+C trap issue
-    at_exit { 
-      conn.query("COMMIT;")
-      puts "Packets commited before exit: #{pktcount}"
-      cap.close 
-      print "Total Packets: "
-      print "#{glbpktcount}".colorize(:white)
-      puts ""
-      self.removepid # Delete process id file
-    }
   rescue err
     STDERR.puts "#{$0}: #{err}" # The Catch all
   end
