@@ -1,12 +1,20 @@
 version: 1.0
 shards:
+  crystal-message-queue:
+    github: crystalmq/crystalmq
+    commit: 0a97c95ad43f537f1587ae490579708d1de396d9
+
   crystal-monetdb-libmapi:
     github: puppetpies/crystal-monetdb-libmapi
-    commit: 0a14224cb3a1388d591837b0d4af6edd002f7e8c
+    commit: bf2690bc42d60ccdc0516aa8e9bbe899910bfa5d
 
   jq:
     github: maiha/jq.cr
-    version: 0.3.1
+    version: 0.3.2
+
+  msgpack:
+    github: benoist/msgpack-crystal
+    commit: bcd4bc4f21744312b5094e4a5fbbf0f0908c3079
 
   mysql:
     github: waterlink/crystal-mysql

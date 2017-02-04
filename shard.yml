@@ -25,5 +25,8 @@ development_dependencies:
   jq:
     github: maiha/jq.cr
 
+  crystal-message-queue:
+    github: crystalmq/crystalmq
+
 license: MIT
 

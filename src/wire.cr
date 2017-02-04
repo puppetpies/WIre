@@ -110,7 +110,6 @@ module Wire
       puts "#{dumpfile}"
       cap = Pcap::Capture.open_offline(dumpfile)
     end
-
     cap.setfilter(filter)
     pktcount = 0
     glbpktcount = 0
