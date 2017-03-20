@@ -59,7 +59,7 @@ module Wire
     io += "#{tcp_off}, #{tcp_hlen}, #{tcp_seq}, #{tcp_sum}, #{tcp_src}, #{tcp_win});"
   end
   
-  def self.udp(schema : String, guid : String, tbl : String, udp_dst : UInt16, udp_len : UInt16, udp_sum : UInt16, udp_src)
+  def self.udp(schema : String, guid : String, tbl : String, udp_dst : UInt16, udp_len : UInt16, udp_sum : UInt16, udp_src : UInt16)
     io = "INSERT INTO #{schema}.#{tbl} "
     io += "(guid, recv_date, recv_time, udp_dport, udp_len, udp_sum, udp_sport) "
     io += "VALUES ("
