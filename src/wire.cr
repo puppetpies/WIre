@@ -13,7 +13,7 @@
 
 require "jq"
 require "crystal-monetdb-libmapi"
-require "pg"
+#require "pg"
 require "mysql"
 require "./wire/*"
 require "pcap"
@@ -78,18 +78,18 @@ module Wire
       # MySQL
       conn = MySQL.connect(j[".host"].as_s, j[".username"].as_s, j[".password"].as_s, j[".db"].as_s, j[".port"].as_i, j[".socket"].as_s)
       p conn if verbose
-    when "postgres"
+    #when "postgres"
       # Postgres
-      conninfo = PQ::ConnInfo.new(j[".host"].as_s, j[".db"].as_s, j[".username"].as_s, j[".password"].as_s, j[".port"].as_i)
-      conn = PG.connect(conninfo)
-      p conn if verbose
+      #conninfo = PQ::ConnInfo.new(j[".host"].as_s, j[".db"].as_s, j[".username"].as_s, j[".password"].as_s, j[".port"].as_i)
+      #conn = PG.connect(conninfo)
+      #p conn if verbose
     else
       # Dummy driver when set to none or other
       conn = Wire::DummyDriver.new
     end
     unless conn == nil || conn == false
       # Use Dummy Driver for failed DB Connect issue
-      conn = Wire::DummyDriver.new unless PG::Connection
+      conn = Wire::DummyDriver.new #unless PG::Connection
     end
     puts banner.colorize(:cyan)
     puts "Starting up!".colorize(:red)

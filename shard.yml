@@ -10,8 +10,7 @@ development_dependencies:
     version: ">= 0.1.1"
   
   pg:
-    branch: macroforqueryorexec
-    github: puppetpies/crystal-pg
+    github: will/crystal-pg
 
   mysql:
     github: waterlink/crystal-mysql
@@ -25,8 +24,8 @@ development_dependencies:
   jq:
     github: maiha/jq.cr
 
-  crystal-message-queue:
-    github: crystalmq/crystalmq
+#  crystal-message-queue:
+#    github: crystalmq/crystalmq
 
 license: MIT
 
