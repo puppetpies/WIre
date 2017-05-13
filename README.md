@@ -11,6 +11,7 @@ First you will need the Crystal Language from http://crystal-lang.org
 You will need to have are shards to be installed however you should just be able to download the binary if on x86_64
 from the bin/ directory.
 
+Tested on Crystal 0.22
 
 ## Database support
 
